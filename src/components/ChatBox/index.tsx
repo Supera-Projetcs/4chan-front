@@ -9,10 +9,12 @@ interface Props {
   room: Room;
 }
 
+type WSMessagesArray = Array<Message | Joined>;
+
 export function ChatBox({ room }: Props) {
   const messagesContent = useRef<HTMLDivElement>(null);
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<WSMessagesArray>([]);
   const [myUser, setMyUser] = useState<MyUser>({ user_info: "" });
   const [msgText, setMsgText] = useState("");
   const [socket, setSocket] = useState<WebSocket>();
@@ -21,7 +23,7 @@ export function ChatBox({ room }: Props) {
     const new_socket = new WebSocket(`${baseUrl}/ws/chat/${room.room}`);
     setSocket(new_socket);
     new_socket.addEventListener("message", reciveMessage);
-  }, []);
+  }, [room]);
 
   function reciveMessage(event: MessageEvent<any>) {
     const data = JSON.parse(event.data);
@@ -31,9 +33,10 @@ export function ChatBox({ room }: Props) {
       setMyUser(data);
     }
 
-    if (data.message) {
+    if (data.message || data.joined) {
       setMessages((prev) => [...prev, data]);
     }
+
     // if (data.rooms) {
     //   setRooms(data.rooms);
     // }
@@ -68,6 +71,24 @@ export function ChatBox({ room }: Props) {
     }
   }
 
+  function isMessageType(message: Joined | Message): message is Message {
+    return (message as Message).message != undefined;
+  }
+
+  function SelectMessage(message: Joined | Message, index: number) {
+    if (isMessageType(message)) {
+      return (
+        <Message
+          key={`${index}-${Date.now()}`}
+          message={message as Message}
+          userLogged={myUser.user_info}
+        />
+      );
+    } else {
+      return <p className={styles["chat-box__joined"]}>{message.joined}</p>;
+    }
+  }
+
   return (
     <>
       <div className={styles["chat-box"]}>
@@ -75,13 +96,7 @@ export function ChatBox({ room }: Props) {
           <h4 className={styles["chat-box__title"]}>{room.room}</h4>
         </header>
         <div ref={messagesContent} className={styles["chat-box__main"]}>
-          {messages.map((message, index) => (
-            <Message
-              key={Date.now()}
-              message={message}
-              userLogged={myUser.user_info}
-            />
-          ))}
+          {messages.map(SelectMessage)}
         </div>
 
         <form className={styles["chat-box__form"]} onSubmit={handleSendMensage}>

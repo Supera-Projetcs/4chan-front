@@ -11,3 +11,8 @@ interface Message {
   message: { type: "chat.message"; message: string };
   date: Date;
 }
+
+interface Joined {
+  joined: string;
+  date: Date;
+}

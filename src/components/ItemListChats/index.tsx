@@ -25,8 +25,6 @@ export function ItemListChats({ room, handleSelectRoom }: Props) {
         <div className={styles["list-item__c-texts"]}>
           <strong>{room.room}</strong>
         </div>
-
-        <time className={styles["list-item__time"]}>11:30</time>
       </div>
     </li>
   );
