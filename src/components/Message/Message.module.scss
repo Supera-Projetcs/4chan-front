@@ -1,0 +1,73 @@
+.message {
+  padding: 0.5rem 1rem;
+  position: relative;
+  width: max-content;
+  max-width: 52%;
+  font-family: "IBM Plex Sans";
+}
+
+.message__username {
+  opacity: 0.5;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  time {
+    font-weight: 400;
+  }
+}
+
+.message__text {
+  word-wrap: break-word;
+  line-break: anywhere;
+  width: 100%;
+  font-size: 0.865rem;
+  line-height: 1.25rem;
+  margin-top: 0.3rem;
+  font-weight: 500;
+}
+
+.message-client {
+  @extend .message;
+  background-color: $primary;
+  border-radius: 0 8px 8px 8px;
+  color: $primary-button-color;
+  margin-left: 16px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    border: 5px solid transparent;
+    border-right-color: $primary;
+    border-top-color: $primary;
+    left: -10px;
+    top: 0;
+  }
+}
+
+.message-attendant {
+  @extend .message;
+  background-color: #3e423e;
+  text-align: right;
+  border-radius: 8px 0 8px 8px;
+  margin-left: 0;
+  margin-right: 16px;
+  color: #f5f5f5;
+  margin-left: auto;
+
+  .message__username {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 0.25rem;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    border: 5px solid transparent;
+    border-top-color: #3e423e;
+    border-left-color: #3e423e;
+    left: auto;
+    right: -10px;
+    top: 0;
+  }
+}

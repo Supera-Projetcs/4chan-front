@@ -1,0 +1,54 @@
+.chat {
+  width: calc(90%);
+  margin: 40px auto;
+  height: calc(100vh - 80px);
+  display: flex;
+
+  gap: 1.5rem;
+
+  &__aside {
+    border: 1px solid $border-color;
+    border-radius: 0.25rem;
+    min-width: 320px;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    background-color: $background-chat;
+
+    &__title {
+      color: #e9e9e9;
+      font-family: "IBM Plex Sans";
+      font-size: 1rem;
+      padding: 1rem;
+      font-weight: 600;
+    }
+
+    &__button {
+      background: none;
+      color: $primary;
+      margin: 0 1rem 1rem;
+      padding: 0;
+      gap: 0.25rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0 0.5rem;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      transition: 0.2s;
+
+      &:hover {
+        transition: 0.2s;
+        background: $button-transparent-hover;
+      }
+    }
+
+    &__list {
+      list-style: none;
+      flex: 1;
+      overflow: auto;
+    }
+  }
+}
