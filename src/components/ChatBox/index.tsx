@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./Chatbox.module.scss";
 import { Send } from "@mui/icons-material";
 import { Message } from "@/components/Message";
+import { dateToNow } from "@/utils/formaterDate";
 
 const baseUrl = process.env.NEXT_PUBLIC_URL_WB || "";
 
@@ -9,7 +10,7 @@ interface Props {
   room: Room;
 }
 
-type WSMessagesArray = Array<Message | Joined>;
+type WSMessagesArray = Array<Message | Joined | Left>;
 
 export function ChatBox({ room }: Props) {
   const messagesContent = useRef<HTMLDivElement>(null);
@@ -23,6 +24,11 @@ export function ChatBox({ room }: Props) {
     const new_socket = new WebSocket(`${baseUrl}/ws/chat/${room.room}`);
     setSocket(new_socket);
     new_socket.addEventListener("message", reciveMessage);
+
+    return () => {
+      setMessages([]);
+      new_socket.close();
+    };
   }, [room]);
 
   function reciveMessage(event: MessageEvent<any>) {
@@ -36,14 +42,6 @@ export function ChatBox({ room }: Props) {
     if (data.message || data.joined) {
       setMessages((prev) => [...prev, data]);
     }
-
-    // if (data.rooms) {
-    //   setRooms(data.rooms);
-    // }
-
-    // if (data.room) {
-    //   setRooms((prev) => [...prev, data.room]);
-    // }
   }
 
   useEffect(() => {
@@ -71,11 +69,14 @@ export function ChatBox({ room }: Props) {
     }
   }
 
-  function isMessageType(message: Joined | Message): message is Message {
+  function isMessageType(message: Joined | Message | Left): message is Message {
     return (message as Message).message != undefined;
   }
+  function isJoinedType(message: Joined | Message | Left): message is Joined {
+    return (message as Joined).joined != undefined;
+  }
 
-  function SelectMessage(message: Joined | Message, index: number) {
+  function SelectMessage(message: Joined | Message | Left, index: number) {
     if (isMessageType(message)) {
       return (
         <Message
@@ -84,8 +85,18 @@ export function ChatBox({ room }: Props) {
           userLogged={myUser.user_info}
         />
       );
+    } else if (isJoinedType(message)) {
+      return (
+        <p className={styles["chat-box__joined"]}>
+          {message.joined} - {dateToNow(message.date)}
+        </p>
+      );
     } else {
-      return <p className={styles["chat-box__joined"]}>{message.joined}</p>;
+      return (
+        <p className={styles["chat-box__joined"]}>
+          {message.left} - {dateToNow(message.date)}
+        </p>
+      );
     }
   }
 
@@ -96,7 +107,7 @@ export function ChatBox({ room }: Props) {
           <h4 className={styles["chat-box__title"]}>{room.room}</h4>
         </header>
         <div ref={messagesContent} className={styles["chat-box__main"]}>
-          {messages.map(SelectMessage)}
+          {messages.map((item, index) => SelectMessage(item, index))}
         </div>
 
         <form className={styles["chat-box__form"]} onSubmit={handleSendMensage}>

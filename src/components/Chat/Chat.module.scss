@@ -1,10 +1,26 @@
+.footer {
+  margin-top: 1rem;
+  border-top: 1px solid #1f1f1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.825rem;
+  padding-top: 0.75rem;
+  color: #393939;
+}
+
 .chat {
   width: calc(90%);
-  margin: 40px auto;
-  height: calc(100vh - 80px);
+  margin: 0 auto;
+  height: calc(100vh - 180px);
   display: flex;
 
   gap: 1.5rem;
+
+  &__logo {
+    margin: 36px auto 24px;
+    width: calc(90%);
+  }
 
   &__aside {
     border: 1px solid $border-color;

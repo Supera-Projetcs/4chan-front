@@ -9,10 +9,14 @@ interface MyUser {
 interface Message {
   username: string;
   message: { type: "chat.message"; message: string };
-  date: Date;
+  date: string;
 }
 
 interface Joined {
   joined: string;
-  date: Date;
+  date: string;
+}
+interface Left {
+  left: string;
+  date: string;
 }

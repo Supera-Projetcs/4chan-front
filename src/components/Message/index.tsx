@@ -1,4 +1,5 @@
 // import { dateToNow } from "@/utils/dateFormater";
+import { dateToNow } from "@/utils/formaterDate";
 import styles from "./Message.module.scss";
 
 interface Props {
@@ -14,7 +15,7 @@ export function Message({ message, userLogged }: Props) {
       className={styles[isMyMessage ? "message-attendant" : "message-client"]}
     >
       <span className={styles["message__username"]}>
-        {message.username} <time>11:30</time>
+        {message.username} <time>{dateToNow(message.date)}</time>
       </span>
       <p className={styles["message__text"]}>{message.message.message}</p>
     </div>
