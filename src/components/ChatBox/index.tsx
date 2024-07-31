@@ -33,13 +33,12 @@ export function ChatBox({ room }: Props) {
 
   function reciveMessage(event: MessageEvent<any>) {
     const data = JSON.parse(event.data);
-    console.log(data);
 
     if (data.user_info) {
       setMyUser(data);
     }
 
-    if (data.message || data.joined) {
+    if (data.message || data.joined || data.left) {
       setMessages((prev) => [...prev, data]);
     }
   }
@@ -91,13 +90,13 @@ export function ChatBox({ room }: Props) {
           {message.joined} - {dateToNow(message.date)}
         </p>
       );
-    } else {
-      return (
-        <p className={styles["chat-box__joined"]}>
-          {message.left} - {dateToNow(message.date)}
-        </p>
-      );
     }
+
+    return (
+      <p className={styles["chat-box__joined"]}>
+        {message.left} - {dateToNow(message.date)}
+      </p>
+    );
   }
 
   return (
